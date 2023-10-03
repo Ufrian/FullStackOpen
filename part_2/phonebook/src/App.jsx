@@ -1,9 +1,35 @@
 import { useState } from 'react'
 
-const Person = ({person}) => 
+const Persons = ({persons}) => 
     <div>
-      {person.name} {person.number}
+      {persons.map((person) => 
+        <PersonDisplay key={person.name} person={person} />)}
     </div>
+
+const PersonDisplay = ({person}) => <div>{person.name} {person.number}</div>
+
+const PersonForm = ({person, handleChange, addPerson}) => {
+  return (
+    <form>
+        <div>
+          name: <input value={person.name}
+          onChange={handleChange.nameChange}
+          />
+        </div>
+        <div>number: <input value={person.number} 
+        onChange={handleChange.numberChange}
+        />
+        </div>
+        <div><button type="submit" onClick={addPerson} >add</button></div>
+      </form>
+  )
+}
+
+const Filter = ({filter, handleFilter}) => 
+    <div>
+        filter shown with: <input value={filter} onChange={handleFilter} />
+    </div>
+
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -55,27 +81,12 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <div>
-        filter shown with: <input value={newFilter} onChange={handleFilterChange} />
-      </div>
+      <Filter filter={newFilter} handleFilter={handleFilterChange} />
       <h2>Add a new</h2>
-      <form>
-        <div>
-          name: <input value={newName}
-          onChange={handleNameChange}
-          />
-        </div>
-        <div>number: <input value={newNumber} 
-        onChange={handleNumberChange}
-        />
-        </div>
-        <div><button type="submit" onClick={addNewPerson} >add</button></div>
-      </form>
+      <PersonForm person={{name: newName, number: newNumber}} 
+      handleChange={{nameChange: handleNameChange, numberChange: handleNumberChange}} addPerson={addNewPerson}/>
       <h2>Numbers</h2>
-      <div>
-        {personsToDisplay.map((person) => 
-          <Person key={person.name} person={person} />)}
-      </div>
+      <Persons persons={personsToDisplay} />
     </div>
   )
 }
