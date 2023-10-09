@@ -21,23 +21,18 @@
       "id": 4
     },
     {
-      "name": "Sakura Miko",
-      "number": "99-99-999999",
-      "id": 5
+      "name": "Elite Miko",
+      "number": "88-88-8888",
+      "id": 6
+    },
+    {
+      "name": "Usada Pekora",
+      "number": "66-66-666666",
+      "id": 7
     },
     {
       "name": "Kaela Kovalskia",
       "number": "69-69-696969",
-      "id": 6
-    },
-    {
-      "name": "Elite Miko",
-      "number": "88-88-888888",
-      "id": 7
-    },
-    {
-      "name": "Usada Pekora",
-      "number": "66-66-6666",
       "id": 8
     }
   ]

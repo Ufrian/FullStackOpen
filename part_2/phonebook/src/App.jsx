@@ -1,35 +1,41 @@
 import { useState, useEffect } from 'react'
 import phoneService from '../services/phonebook'
 
-const Persons = ({persons}) => 
+const Persons = ({ persons, delPerson }) =>
+  <div>
+    {persons.map((person) =>
+      <PersonDisplay key={person.name} person={person} delPerson={delPerson} />)}
+  </div>
+
+const PersonDisplay = ({ person, delPerson }) => {
+  return (
     <div>
-      {persons.map((person) => 
-        <PersonDisplay key={person.name} person={person} />)}
-    </div>
+    {person.name} {person.number}
+    <button onClick={() => delPerson(person.name, person.id)}>delete</button>
+  </div>
+  )}
 
-const PersonDisplay = ({person}) => <div>{person.name} {person.number}</div>
-
-const PersonForm = ({person, handleChange, addPerson}) => {
+const PersonForm = ({ person, handleChange, addPerson }) => {
   return (
     <form>
-        <div>
-          name: <input value={person.name}
+      <div>
+        name: <input value={person.name}
           onChange={handleChange.nameChange}
-          />
-        </div>
-        <div>number: <input value={person.number} 
-        onChange={handleChange.numberChange}
         />
-        </div>
-        <div><button type="submit" onClick={addPerson} >add</button></div>
-      </form>
+      </div>
+      <div>number: <input value={person.number}
+        onChange={handleChange.numberChange}
+      />
+      </div>
+      <div><button type="submit" onClick={addPerson} >add</button></div>
+    </form>
   )
 }
 
-const Filter = ({filter, handleFilter}) => 
-    <div>
-        filter shown with: <input value={filter} onChange={handleFilter} />
-    </div>
+const Filter = ({ filter, handleFilter }) =>
+  <div>
+    filter shown with: <input value={filter} onChange={handleFilter} />
+  </div>
 
 
 const App = () => {
@@ -39,15 +45,15 @@ const App = () => {
   const [newFilter, setNewFilter] = useState('')
   const [showAll, setShowAll] = useState(true)
 
-  useEffect( () => {
+  useEffect(() => {
     phoneService
-    .getAll()
-    .then(initialPersons => setPersons(initialPersons))
+      .getAll()
+      .then(initialPersons => setPersons(initialPersons))
   }, [])
 
 
   const handleNameChange = (event) => setNewName(event.target.value)
-  
+
   const handleNumberChange = (event) => setNewNumber(event.target.value)
 
   const handleFilterChange = (event) => {
@@ -66,7 +72,7 @@ const App = () => {
 
     if (persons.find(person => person.name.toLowerCase() === newName.toLowerCase())) {
       setNewName('')
-      setNewNumber('')      
+      setNewNumber('')
       return alert(`${newName} is already added to phonebook`)
     }
 
@@ -74,14 +80,25 @@ const App = () => {
       name: newName,
       number: newNumber
     }
-    
+
     phoneService
       .create(newPersonObj)
       .then(newPerson => {
         setPersons(persons.concat(newPerson))
-        setNewName('')        
-        setNewNumber('')      
+        setNewName('')
+        setNewNumber('')
       })
+  }
+
+  const delPerson = (name, id) => {
+    if (window.confirm(`Delete ${name}?`)) {
+      phoneService
+        .delRequest(id)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id))
+        })
+        .catch(error => alert(`${name} was already deleted`))
+    }
   }
 
   return (
@@ -89,10 +106,11 @@ const App = () => {
       <h1>Phonebook</h1>
       <Filter filter={newFilter} handleFilter={handleFilterChange} />
       <h2>Add a new</h2>
-      <PersonForm person={{name: newName, number: newNumber}} 
-      handleChange={{nameChange: handleNameChange, numberChange: handleNumberChange}} addPerson={addNewPerson}/>
+      <PersonForm person={{ name: newName, number: newNumber }}
+        handleChange={{ nameChange: handleNameChange, numberChange: handleNumberChange }} 
+        addPerson={addNewPerson} />
       <h2>Numbers</h2>
-      <Persons persons={personsToDisplay} />
+      <Persons persons={personsToDisplay} delPerson={delPerson} />
     </div>
   )
 }
