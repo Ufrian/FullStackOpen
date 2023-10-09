@@ -2,7 +2,7 @@
   "persons": [
     {
       "name": "Arto Hellas",
-      "number": "040-123456",
+      "number": "404-201325",
       "id": 1
     },
     {
@@ -22,7 +22,7 @@
     },
     {
       "name": "Elite Miko",
-      "number": "88-88-8888",
+      "number": "12-123-1234",
       "id": 6
     },
     {
@@ -34,6 +34,16 @@
       "name": "Kaela Kovalskia",
       "number": "69-69-696969",
       "id": 8
+    },
+    {
+      "name": "Pekochan",
+      "number": "03-221-9654",
+      "id": 10
+    },
+    {
+      "name": "Sakamata Chloe",
+      "number": "65-55-6678",
+      "id": 11
     }
   ]
 }

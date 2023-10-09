@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import phoneService from '../services/phonebook'
+import axios from 'axios'
 
 const Persons = ({ persons, delPerson }) =>
   <div>
@@ -70,10 +71,12 @@ const App = () => {
 
     if (!newName || !newNumber) return alert("Fill out all the fields")
 
-    if (persons.find(person => person.name.toLowerCase() === newName.toLowerCase())) {
-      setNewName('')
-      setNewNumber('')
-      return alert(`${newName} is already added to phonebook`)
+    const personToUpdate = persons.find(person => person.name.toLowerCase() === newName.toLowerCase()) || false
+
+    if (personToUpdate) {
+      if (window.confirm(`${newName} is already added to phonebook, replace old number with a new one?`))
+        return updatePerson({...personToUpdate, number: newNumber})
+      else return
     }
 
     const newPersonObj = {
@@ -85,6 +88,16 @@ const App = () => {
       .create(newPersonObj)
       .then(newPerson => {
         setPersons(persons.concat(newPerson))
+        setNewName('')
+        setNewNumber('')
+      })
+  }
+
+  const updatePerson = (changedPerson) => {
+    phoneService
+      .update(changedPerson.id, changedPerson)
+      .then(returnedPerson => {
+        setPersons(persons.map(person => person.id !== changedPerson.id ? person : returnedPerson))
         setNewName('')
         setNewNumber('')
       })
