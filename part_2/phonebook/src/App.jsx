@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react'
 import phoneService from '../services/phonebook'
 
 const Notification = (props) => {
+  const show = props.status ? 'success' : 'error'
+
   if (props.message === null) return
 
   return (
-    <div className='success' >{props.message}</div>
+    <div className={show} >{props.message}</div>
   )
 }
 
@@ -51,7 +53,8 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
   const [showAll, setShowAll] = useState(true)
-  const [successMessage, setSuccessMessage] = useState(null)
+  const [notificationMessage, setNotificationMessage] = useState(null)
+  const [status, setStatus] = useState(true)
 
   useEffect(() => {
     phoneService
@@ -81,8 +84,9 @@ const App = () => {
 
     if (personToUpdate) {
       if (window.confirm(`${newName} is already added to phonebook, replace old number with a new one?`)) {
-        successfulRequest(`${newName} Number Changed`)
-        return updatePerson({...personToUpdate, number: newNumber})
+        handleMessage(`${newName} Number Changed`, true)
+        updatePerson({...personToUpdate, number: newNumber})
+        return
       }
       else return
     }
@@ -98,9 +102,9 @@ const App = () => {
         setPersons(persons.concat(newPerson))
         setNewName('')
         setNewNumber('')
+        handleMessage(`${newName} Added`, true)
       })
-
-    successfulRequest(`${newName} Added`)
+    
   }
 
   const updatePerson = (changedPerson) => {
@@ -111,11 +115,16 @@ const App = () => {
         setNewName('')
         setNewNumber('')
       })
+      .catch(() => {
+        setPersons(persons.filter(person => person.id !== changedPerson.id))
+        handleMessage(`Information of ${changedPerson.name} has already been removed from server`, false)
+      })
   }
 
-  const successfulRequest = (msg) => {
-    setSuccessMessage(msg)
-    setTimeout( () => setSuccessMessage(null), 5000)
+  const handleMessage = (msg, sts) => {
+    setStatus(sts)
+    setNotificationMessage(msg)
+    setTimeout( () => setNotificationMessage(null), 5000)
   }
 
   const delPerson = (name, id) => {
@@ -132,7 +141,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <Notification message={successMessage} /> 
+      <Notification message={notificationMessage} status={status} /> 
       <Filter filter={newFilter} handleFilter={handleFilterChange} />
       <h2>Add a new</h2>
       <PersonForm person={{ name: newName, number: newNumber }}
