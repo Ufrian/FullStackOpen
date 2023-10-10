@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react'
 import phoneService from '../services/phonebook'
-import axios from 'axios'
+
+const Notification = (props) => {
+  if (props.message === null) return
+
+  return (
+    <div className='success' >{props.message}</div>
+  )
+}
 
 const Persons = ({ persons, delPerson }) =>
   <div>
@@ -38,20 +45,19 @@ const Filter = ({ filter, handleFilter }) =>
     filter shown with: <input value={filter} onChange={handleFilter} />
   </div>
 
-
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
   const [showAll, setShowAll] = useState(true)
+  const [successMessage, setSuccessMessage] = useState(null)
 
   useEffect(() => {
     phoneService
       .getAll()
       .then(initialPersons => setPersons(initialPersons))
   }, [])
-
 
   const handleNameChange = (event) => setNewName(event.target.value)
 
@@ -74,8 +80,10 @@ const App = () => {
     const personToUpdate = persons.find(person => person.name.toLowerCase() === newName.toLowerCase()) || false
 
     if (personToUpdate) {
-      if (window.confirm(`${newName} is already added to phonebook, replace old number with a new one?`))
+      if (window.confirm(`${newName} is already added to phonebook, replace old number with a new one?`)) {
+        successfulRequest(`${newName} Number Changed`)
         return updatePerson({...personToUpdate, number: newNumber})
+      }
       else return
     }
 
@@ -91,6 +99,8 @@ const App = () => {
         setNewName('')
         setNewNumber('')
       })
+
+    successfulRequest(`${newName} Added`)
   }
 
   const updatePerson = (changedPerson) => {
@@ -101,6 +111,11 @@ const App = () => {
         setNewName('')
         setNewNumber('')
       })
+  }
+
+  const successfulRequest = (msg) => {
+    setSuccessMessage(msg)
+    setTimeout( () => setSuccessMessage(null), 5000)
   }
 
   const delPerson = (name, id) => {
@@ -117,6 +132,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification message={successMessage} /> 
       <Filter filter={newFilter} handleFilter={handleFilterChange} />
       <h2>Add a new</h2>
       <PersonForm person={{ name: newName, number: newNumber }}
