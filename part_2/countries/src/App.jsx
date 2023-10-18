@@ -12,6 +12,7 @@ const SingleCountry = ({country}) => {
   return (
     <div>
       <h1>{country.name.common}</h1>
+      <img src={country.flags.png}/>
       <div>
         Capital: {country.capital}
       </div>
@@ -20,14 +21,13 @@ const SingleCountry = ({country}) => {
       </div>
       <h3>languages</h3>
       <ul>
-        {languages.map(lang => <li key={lang} >{lang}</li>)}
+        {languages.map(lang => <li key={lang}>{lang}</li>)}
       </ul>
-      <img src={country.flags.png}/>
     </div>
   )
 }
 
-const Countries = ({countries}) => {
+const Countries = ({countries, handleShow, isShow}) => {
   if (countries.length > 10) return (
     <div>Too many matches, specify another filter</div>
   )
@@ -41,22 +41,30 @@ const Countries = ({countries}) => {
   return (
     <div>
       {countries.map(country => 
-        <Country key={country.name.official} value={country.name.common} />  
+        <Country key={country.name.official} country={country} handleShow={handleShow} isShow={isShow} />  
       )}
     </div>
   )
 }
 
-const Country = (props) => {
+const Country = ({country, handleShow, isShow}) => {
+  const countryStatus = isShow.filter(id => Object.keys(id)[0] === country.name.official)  
+  const btnTxt = countryStatus[0] === undefined ? "show" : (countryStatus[0][country.name.official] ? "hide" : "show") 
+
   return (
-    <div>{props.value}</div>
+    <div>
+      {country.name.common}
+    <button type="submit" onClick={() => handleShow(country.name.official)} >{btnTxt}</button>
+    {btnTxt === "hide" ? <SingleCountry country={country} /> : null } 
+    </div>
   )
 }
 
 const App = () => {
   const [country, setCountry] = useState('')
   const [allCountriesData, setAllCountriesData] = useState([])
-  const [showCountry, setShowCountry] = useState(false)
+  const [showCountries, setShowCountries] = useState(false)
+  const [showStatus, setShowStatus] = useState([])
 
   useEffect (() => {
       countriesService
@@ -65,22 +73,35 @@ const App = () => {
   }, [])
   
   const handleCountryChange = (e) => {
-    if (e.target.value) setShowCountry(true)
-    else setShowCountry(false) 
+    if (e.target.value) setShowCountries(true)
+    else setShowCountries(false) 
 
     setCountry(e.target.value)
   }
+
+  const handleShowCountry = (id) => {
+    const copyStatus = showStatus.map(x => x)
+    const copyKeys = copyStatus.map(country => Object.keys(country)[0])
+    
+    if (copyKeys.includes(id)) {
+      const toggledStatus = copyStatus.map(country => Object.keys(country)[0] !== id ? country : {[id]: !Object.values(country)[0]})      
+      setShowStatus(toggledStatus)
+    }
+
+    else setShowStatus(copyStatus.concat({[id]: true}))
+  } 
 
   if (!allCountriesData) return
   
   const filterCountries = () => allCountriesData.filter(countryObj => countryObj.name.common.toLowerCase().includes(country.toLowerCase()))
 
-  const filteredCountries = showCountry ? filterCountries() : []
+  const filteredCountries = showCountries ? filterCountries() : []
+
 
   return (
     <div>
       <Form country={country} handleChange={handleCountryChange} />
-      <Countries countries={filteredCountries} />
+      <Countries countries={filteredCountries} handleShow={handleShowCountry} isShow={showStatus} />
     </div>
   )
 }
