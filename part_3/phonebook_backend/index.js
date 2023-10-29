@@ -2,9 +2,7 @@ const express = require('express')
 const app = express()
 const morgan = require('morgan')
 
-app.use(morgan('tiny'))
 app.use(express.json())
-
 
 let persons = [
     { 
@@ -29,7 +27,8 @@ let persons = [
     }
 ]
 
-morgan(':method :url :status :res[content-length] - :response-time ms');
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms - :body'))
+morgan.token('body', function (req, res) { return JSON.stringify(req.body) })
 
 app.get('/api/persons', (request, response) => {
     response.json(persons)

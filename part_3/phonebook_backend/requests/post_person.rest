@@ -2,7 +2,15 @@ POST http://localhost:3001/api/persons/
 Content-Type: application/json
 
 {
-    "name": "Sakura Miko",
-    "number": "44-444-444-4"
+    "name": "Kaela Kovalskia",
+    "number": "69-69-696969"
 }
 
+###
+POST http://localhost:3001/api/persons/
+Content-Type: application/json
+
+{
+    "name": "Usada Pekora",
+    "number": "66-66-666666"
+}
