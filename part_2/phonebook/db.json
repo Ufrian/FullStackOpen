@@ -1,0 +1,54 @@
+{
+  "persons": [
+    {
+      "name": "Arto Hellas",
+      "number": "404-201325",
+      "id": 1
+    },
+    {
+      "name": "Ada Lovelace",
+      "number": "39-44-5323523",
+      "id": 2
+    },
+    {
+      "name": "Dan Abramov",
+      "number": "12-43-234345",
+      "id": 3
+    },
+    {
+      "name": "Mary Poppendieck",
+      "number": "39-23-6423122",
+      "id": 4
+    },
+    {
+      "name": "Elite Miko",
+      "number": "12-123-1234",
+      "id": 6
+    },
+    {
+      "name": "Usada Pekora",
+      "number": "66-66-666666",
+      "id": 7
+    },
+    {
+      "name": "Kaela Kovalskia",
+      "number": "69-69-696969",
+      "id": 8
+    },
+    {
+      "name": "Pekochan",
+      "number": "31-221-22232",
+      "id": 10
+    },
+    {
+      "name": "Sakura Miko",
+      "number": "12312894984",
+      "id": 11
+    },
+    {
+      "name": "Kobo Kanaeru",
+      "number": "1321312312",
+      "id": 12
+    }
+  ]
+}
