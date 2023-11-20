@@ -13,7 +13,7 @@ if (process.argv.length > 3 && process.argv.length < 5) {
 
 const password = process.argv[2]
 
-const url = `mongodb+srv://Ufrian:${password}@person.i2t6cz8.mongodb.net/?retryWrites=true&w=majority`
+const url = `mongodb+srv://Ufrian:${password}@person.i2t6cz8.mongodb.net/phonebookApp?retryWrites=true&w=majority`
 
 mongoose.set('strictQuery',false)
 mongoose.connect(url)
@@ -29,11 +29,11 @@ if (process.argv.length === 3) {
     Person.find({}).then(result => {
         console.log("phonebook: ")
         result.forEach(data => {
-          console.log(data.name, data.number)
+          console.log(data)
         })
     mongoose.connection.close()
     })
-    process.exit(0)
+    return
 }   
 
 const person = new Person({
