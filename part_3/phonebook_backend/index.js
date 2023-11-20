@@ -1,8 +1,10 @@
+require('dotenv').config()
 const express = require('express')
-const app = express()
 const morgan = require('morgan')
 const cors = require('cors')
+const Person = require('./models/phonebook')
 
+const app = express()
 app.use(express.static('dist'))
 app.use(express.json())
 app.use(cors())
@@ -34,28 +36,29 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms - 
 morgan.token('body', function (req, res) { return JSON.stringify(req.body) })
 
 app.get('/api/persons', (request, response) => {
-    response.json(persons)
+    Person.find({}).then(people => {
+      response.json(people)
+    })
 })
 
 app.get('/info', (request, response) => {
-    const date = new Date().toString() 
-    const html = `
-    <div>
-        <p>Phonebook has info for ${persons.length} people </p>
-        <p>${date}</p>
-    </div>
-    `
-    response.send(html)
+    Person.countDocuments({}).then(count => {
+      const date = new Date().toString()
+      const html = `
+      <div>
+          <p>Phonebook has info for ${count} people </p>
+          <p>${date}</p>
+      </div>
+      `
+      response.send(html)
+    })
 })
 
 app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const person = persons.find(person => person.id === id)
-
-    if (person) response.json(person)
-    else response.status(404).end()
+    Person.findById(request.params.id).then(person => {
+      response.json(person)
+    })
 })
-
 
 app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
