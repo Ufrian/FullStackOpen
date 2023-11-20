@@ -2,8 +2,8 @@ POST http://localhost:3001/api/persons/
 Content-Type: application/json
 
 {
-    "name": "Kaela Kovalskia",
-    "number": "69-69-696969"
+    "name": "Hoshimachi Suisei",
+    "number": "43-42-414445",
 }
 
 ###
@@ -11,6 +11,6 @@ POST http://localhost:3001/api/persons/
 Content-Type: application/json
 
 {
-    "name": "Usada Pekora",
-    "number": "66-66-666666"
+    "name": "Nakiri Ayame",
+    "number": "09-67-823150"
 }

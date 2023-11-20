@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 
 mongoose.set('strictQuery',false)
-
 const url = process.env.MONGODB_URI
 
 console.log('connecting to', url)
@@ -28,24 +27,3 @@ personSchema.set('toJSON', {
 })
 
 module.exports = mongoose.model('Person', personSchema)
-
-// if (process.argv.length === 3) {
-    // Person.find({}).then(result => {
-        // console.log("phonebook: ")
-        // result.forEach(data => {
-        //   console.log(data)
-        // })
-    // mongoose.connection.close()
-    // })
-    // process.exit(0)
-// }   
-// 
-// const person = new Person({
-    // name: process.argv[3],
-    // number: process.argv[4]
-// })
-// 
-// person.save().then(result => {
-    // console.log(`Added ${person.name} number ${person.number} to phonebook`)
-    // mongoose.connection.close()
-// })
