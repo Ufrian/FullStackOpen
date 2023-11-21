@@ -2,8 +2,8 @@ POST http://localhost:3001/api/persons/
 Content-Type: application/json
 
 {
-    "name": "Hoshimachi Suisei",
-    "number": "43-42-414445"
+    "name": "Gawr Gura",
+    "number": "88-12-3129984"
 }
 
 ###
@@ -11,6 +11,15 @@ POST http://localhost:3001/api/persons/
 Content-Type: application/json
 
 {
-    "name": "Nakiri Ayame",
-    "number": "09-67-823150"
+    "name": "Ouro Kronii",
+    "number": "13-14-151618"
+}
+
+###
+POST http://localhost:3001/api/persons/
+Content-Type: application/json
+
+{
+    "xapr": "asblueese Suisei",
+    "kikir": "43-42-414445"
 }
