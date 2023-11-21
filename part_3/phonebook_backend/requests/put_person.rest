@@ -1,0 +1,7 @@
+PUT http://localhost:3001/api/persons/655d0965ad125b8ab19e1ccb
+Content-Type: application/json
+
+{
+    "name": "Nakiri Ayame",
+    "number": "84-22-1233455"
+}   
