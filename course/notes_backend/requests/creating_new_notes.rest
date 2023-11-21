@@ -8,3 +8,6 @@ content-type: application/json
     "content": "Genshin Impact",
     "important": false
 }
+
+###
+DELETE http://localhost:3001/api/notes/655a2a883c732aed825535cf
