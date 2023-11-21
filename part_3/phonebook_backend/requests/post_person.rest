@@ -3,7 +3,7 @@ Content-Type: application/json
 
 {
     "name": "Hoshimachi Suisei",
-    "number": "43-42-414445",
+    "number": "43-42-414445"
 }
 
 ###
