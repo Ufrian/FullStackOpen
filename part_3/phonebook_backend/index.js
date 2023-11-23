@@ -51,13 +51,6 @@ app.delete('/api/persons/:id', (request, response, next) => {
 app.post('/api/persons', (request, response, next) => {
   const body = request.body
 
-  if (!body.name || !body.number) {
-    const err = new Error('Failed to add! Missing name/number fields')
-    err.name = "MissingField"
-    next(err)
-    return 
-  }
-
   const person = new Person({
     name: body.name,
     number: body.number
@@ -70,21 +63,14 @@ app.post('/api/persons', (request, response, next) => {
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
-  const body = request.body
+  const {name, number} = request.body
 
-  const person = {
-    name: body.name,
-    number: body.number
-  }
-
-  Person.findByIdAndUpdate(request.params.id, person, {new: true})
+  Person.findByIdAndUpdate(request.params.id, {name, number}, {new: true, runValidators: true, context: 'query'})
   .then(updatedPerson => {
     response.json(updatedPerson)
   })
   .catch(error => next(error))
 })
-
-
 
 const errorHandler = (error, request, response, next) => {
   console.log(error.message)
@@ -93,8 +79,8 @@ const errorHandler = (error, request, response, next) => {
     return response.status(400).send({error: 'malformatted id'})
   }
 
-  if (error.name === "MissingField") {
-    return response.status(400).json({error: "name/number missing"})
+  if (error.name === "ValidationError") {
+    return response.status(400).json({error: error.message})
   }
 
   next(error)

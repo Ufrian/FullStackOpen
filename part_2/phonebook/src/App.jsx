@@ -104,27 +104,32 @@ const App = () => {
         setNewNumber('')
         handleMessage(`${newName} Added`, true)
       })
-    
+      .catch(error => {
+        handleMessage(error.response.data.error, false)
+      })
   }
 
   const updatePerson = (changedPerson) => {
     phoneService
       .update(changedPerson.id, changedPerson)
       .then(returnedPerson => {
-        setPersons(persons.map(person => person.id !== changedPerson.id ? person : returnedPerson))
-        setNewName('')
-        setNewNumber('')
+        if (returnedPerson) {
+          setPersons(persons.map(person => person.id !== changedPerson.id ? person : returnedPerson))
+          setNewName('')
+          setNewNumber('')
+        }
+        else {
+          setPersons(persons.filter(person => person.id !== changedPerson.id))
+          handleMessage(`Information of ${changedPerson.name} has already been removed from server`, false)
+        }
       })
-      .catch(() => {
-        setPersons(persons.filter(person => person.id !== changedPerson.id))
-        handleMessage(`Information of ${changedPerson.name} has already been removed from server`, false)
-      })
+      .catch(error => handleMessage(error.response.data.error, false))
   }
 
   const handleMessage = (msg, sts) => {
     setStatus(sts)
     setNotificationMessage(msg)
-    setTimeout( () => setNotificationMessage(null), 5000)
+    setTimeout( () => setNotificationMessage(null), 7000)
   }
 
   const delPerson = (name, id) => {
