@@ -2,8 +2,8 @@ POST http://localhost:3001/api/persons/
 Content-Type: application/json
 
 {
-    "name": "Kaela Kovalskia",
-    "number": "69-69-696969"
+    "name": "Gawr Gura",
+    "number": "88-12-3129984"
 }
 
 ###
@@ -11,6 +11,15 @@ POST http://localhost:3001/api/persons/
 Content-Type: application/json
 
 {
-    "name": "Usada Pekora",
-    "number": "66-66-666666"
+    "name": "Ouro Kronii",
+    "number": "13-14-151618"
+}
+
+###
+POST http://localhost:3001/api/persons/
+Content-Type: application/json
+
+{
+    "xapr": "asblueese Suisei",
+    "kikir": "43-42-414445"
 }
