@@ -53,6 +53,25 @@ test('a blog can be added', async () => {
   expect(titles).toContain('How to Learn from Tutorials the Right Way - and Not Get Trapped in Tutorial Hell')
 })
 
+test('if likes property is missing, it will default to the value 0', async () => {
+  const newBlog = {
+    title: "5 Common Server Vulnerabilities with Node.js",
+    author: "JavaScript Today",
+    url: "https://blog.javascripttoday.com/blog/node-js-server-vulnerabilities/",
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  const [lastBlog] = blogsAtEnd.slice(-1)
+  
+  expect(lastBlog.likes).toBe(0)
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
