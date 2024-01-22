@@ -24,6 +24,14 @@ test('all blogs are returned', async () => {
   expect(response.body).toHaveLength(helper.initialBlogs.length)
 })
 
+test('unique identifier property is named id', async () => {
+  const blogs = await helper.blogsInDb()
+
+  const firstBlog = blogs[0]   
+
+  expect(firstBlog.id).toBeDefined()  
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
