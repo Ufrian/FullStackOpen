@@ -72,6 +72,34 @@ test('if likes property is missing, it will default to the value 0', async () =>
   expect(lastBlog.likes).toBe(0)
 })
 
+test('verify if title or url properties are missing from request', async () => {
+  const noTitleBlog = {
+    author: "The Fortnite Team",
+    url: "https://www.fortnite.com/competitive/news/fortnite-championship-series-2024-details",
+    likes: 20
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(noTitleBlog)
+    .expect(400)
+
+  const noUrlBlog = {
+    title: "Oracle introduces JavaScript support in MySQL",
+    author: "Paul Krill",
+    likes: 1
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(noUrlBlog)
+    .expect(400)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
