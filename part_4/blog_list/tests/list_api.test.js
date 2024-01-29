@@ -1,9 +1,15 @@
 const supertest = require('supertest')
+const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 const helper = require('./test_helper')
 const app = require('../app')
+
 const Blog = require('../models/blog')
+const User = require('../models/user')
+
 const blogsRouter = require('../controllers/blogs')
+const usersRouter = require('../controllers/users')
+
 
 const api = supertest(app)
 
@@ -140,6 +146,78 @@ describe('updating a blog', () => {
 
     const blogsAtEnd = await helper.blogsInDb()
     expect(blogsAtEnd[0].likes).toBe(updatedBlog.likes)
+  })
+})
+
+describe('creating a user when there is initially one user in db', () => {
+  beforeEach(async () => {
+    await User.deleteMany({})
+
+    const passwordHash = await bcrypt.hash('wordpass', 10)
+    const user = new User({ username: 'sieg', name: "Siegfried" ,passwordHash })
+
+    await user.save()
+  })
+
+  test('fails if username already exists', async () => {
+    const usersAtStart = await User.find({})
+
+    const newUser = {
+      username: 'sieg',
+      name: 'Siegmeyer',
+      password: "password1234"
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    expect(result.body.error).toContain('expected `username` to be unique')
+      
+    const usersAtEnd = await User.find({})
+    expect(usersAtEnd).toEqual(usersAtStart)
+  })
+
+  test('fail with status code 400 if username is less than 3 characters long', async () => {
+    const usersAtStart = await User.find({})
+
+    const newUser = {
+      username: "ao",
+      name: "Hiodoshi Ao",
+      password: "ahokun"
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    expect(result.body.error).toContain('is shorter than the minimum allowed length')
+    
+    const usersAtEnd = await User.find({})
+    expect(usersAtEnd).toEqual(usersAtStart)
+  })
+
+  test('fail with status code 400 if password is less than 3 characters long ', async () => {
+    const usersAtStart = await User.find({})
+    
+    const newUser = {
+      username: "hiodoshi",
+      name: "Hiodoshi Ao",
+      password: "k"
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    expect(result.body.error).toContain('password must be at least 3 characters long')
+        
+    const usersAtEnd = await User.find({})
+    expect(usersAtEnd).toEqual(usersAtStart)
   })
 })
 
