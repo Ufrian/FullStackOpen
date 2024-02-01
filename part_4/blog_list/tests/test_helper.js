@@ -1,4 +1,7 @@
+const jwt = require('jsonwebtoken')
 const Blog = require('../models/blog')
+const User = require('../models/user')
+
 
 const singleBlog = [
   {
@@ -67,7 +70,36 @@ const blogsInDb = async () => {
   return blogs.map(blog => blog.toJSON())
 }
 
+const getToken = async () => {
+  const [user] = await User.find({})
+
+  const userForToken = {
+    username: user.username,
+    id: user._id,
+  }
+
+  return jwt.sign(userForToken, process.env.SECRET)
+}
+
+const cleanDbandPostBlog = async() => {
+  await Blog.deleteMany({})
+
+  const [user] = await User.find({})
+
+  const blog = {
+    title: "JWT Authentication in Node.js: A Practical Guide",
+    author: "Dev Balaji",
+    url: "https://dvmhn07.medium.com/jwt-authentication-in-node-js-a-practical-guide-c8ab1b432a49/",
+    likes: 159,
+    user: user._id
+  }
+  
+  await Blog.insertMany(blog)
+}
+
+
+
 module.exports = {
-  initialBlogs, blogsInDb
+  initialBlogs, blogsInDb, getToken, cleanDbandPostBlog
 }
 
