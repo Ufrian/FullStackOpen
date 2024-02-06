@@ -10,13 +10,21 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)  
-
+  const [user, setUser] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
     )  
+  }, [])
+
+  useEffect(() => {
+    const loggedUserLocal = window.localStorage.getItem('loggedNoteappUser')
+    
+    if(loggedUserLocal) {
+      const user = JSON.parse(loggedUserLocal)
+      setUser(user)
+    }
   }, [])
 
   const handleLogin = async (event) => {
@@ -25,6 +33,10 @@ const App = () => {
     try {
       const user = await loginService.login({ username, password })
 
+      window.localStorage.setItem(
+        'loggedNoteappUser', JSON.stringify(user)
+      )
+
       setUser(user)
       setUsername('')
       setPassword('')
@@ -32,6 +44,11 @@ const App = () => {
     catch (error) {
       console.error(error)
     }
+  }
+
+  const handleLogOut = () => {
+    window.localStorage.removeItem('loggedNoteappUser')
+    setUser(null)
   }
 
  return (
@@ -47,6 +64,7 @@ const App = () => {
     {user && <Blogs 
         name={ user.name } 
         blogs={ blogs }
+        logOut={handleLogOut}
       />
     }
   </div>
