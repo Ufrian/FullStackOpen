@@ -1,8 +1,10 @@
+import '../App.css'
 import { useState, useEffect } from 'react'
 
 import Blogs from './components/Blogs'
 import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
+import Notification from './components/Notification'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -10,21 +12,14 @@ import loginService from './services/login'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [credentials, setCredentials] = useState({
-    username: '',
-    password: ''
-  })
-  const [newBlog, setNewBlog] = useState({
-    title: '',
-    author: '',
-    url: ''
-  })
-
+  const [credentials, setCredentials] = useState({username: '', password: ''})
+  const [newBlog, setNewBlog] = useState({title: '', author: '', url: ''})
+  const [notification, setNotification] = useState({msg: '', type: ''})
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+    blogService
+      .getAll()
+      .then(blogs => setBlogs( blogs ))
   }, [])
 
   useEffect(() => {
@@ -54,17 +49,17 @@ const App = () => {
       
       blogService.setToken(user.token)
       setUser(user)
-      setCredentials({
-        username: '',
-        password: ''
-      })
+      setCredentials({...credentials, username: '', password: ''})
     } 
-    catch (error) {
-      console.error(error)
+    catch ({ response }) {
+      console.log(response.data.error)
+      handleNotification(response.data.error, "error")
     }
   }
 
-  const handleLogOut = () => {
+  if (!blogs.length) return
+
+  const handleLogOut = async () => {
     window.localStorage.removeItem('loggedNoteappUser')
     blogService.setToken(null)
     setUser(null)
@@ -75,25 +70,35 @@ const App = () => {
     setNewBlog({...newBlog, [name]: value })
   }
 
-
   const addNewBlog = async () => {
     try {
       const addedBlog = await blogService.create(newBlog)
+
       setBlogs(blogs.concat(addedBlog))
-      setNewBlog({
-        title: '',
-        author: '',
-        url: ''
-      })
+      setNewBlog({...newBlog, title: '', author: '',url: ''})
+      handleNotification(`A new blog: ${addedBlog.title} - by ${addedBlog.author} added`, "success")
     }
-    catch (error) {
-      console.error(error)
+    catch ({ response }) {
+      handleNotification(response.data.error, "error")
     }
+  }
+
+  const handleNotification = (message, status) => {
+    setNotification({
+      ...notification,
+      msg: message, 
+      type: status 
+    })
+    setTimeout(() => {
+      setNotification({...notification, msg: '', type: '' })
+    }, 5000)
   }
 
   if (user === null) {
     return (
       <div>
+        <h2>Log In</h2>
+        <Notification notification={ notification } />
         <LoginForm
           handleLogin={ handleLogin }
           username={ credentials.username }
@@ -107,6 +112,7 @@ const App = () => {
  return (
   <div>
     <h2>Home</h2>
+    <Notification notification={ notification } />
     {user.name} logged in
     <button type='submit' onClick={handleLogOut}>logout</button>
     <NewBlogForm
