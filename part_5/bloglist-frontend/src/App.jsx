@@ -52,7 +52,6 @@ const App = () => {
       setCredentials({...credentials, username: '', password: ''})
     } 
     catch ({ response }) {
-      console.log(response.data.error)
       handleNotification(response.data.error, "error")
     }
   }
@@ -125,5 +124,6 @@ const App = () => {
   </div>
  )
 }
+
 
 export default App
