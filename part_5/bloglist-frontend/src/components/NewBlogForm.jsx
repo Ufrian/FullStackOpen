@@ -1,4 +1,18 @@
-const NewBlogForm = ({ newBlog, handleNewBlog, addNewBlog }) => {
+import { useState } from "react"
+
+const NewBlogForm = ({ addNewBlog }) => {
+  const [newBlog, setNewBlog] = useState({title: '', author: '', url: ''})
+
+  const handleNewBlog = (event) => {
+    const {name, value} = event.target
+    setNewBlog({...newBlog, [name]: value })
+  }
+
+  const createBlog = () => {
+    addNewBlog(newBlog)
+    setNewBlog({...newBlog, title: '', author: '',url: ''})
+  }
+
   return (
     <div>
       <h2>Create new Blog</h2>
@@ -29,7 +43,7 @@ const NewBlogForm = ({ newBlog, handleNewBlog, addNewBlog }) => {
           onChange={handleNewBlog} 
         />
       </div>
-      <button type='submit' onClick={ addNewBlog }>create</button>
+      <button type='submit' onClick={ createBlog }>create</button>
     </div>
   )
 }

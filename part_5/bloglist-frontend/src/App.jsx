@@ -14,7 +14,6 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [credentials, setCredentials] = useState({username: '', password: ''})
-  const [newBlog, setNewBlog] = useState({title: '', author: '', url: ''})
   const [notification, setNotification] = useState({msg: '', type: ''})
 
   useEffect(() => {
@@ -65,17 +64,11 @@ const App = () => {
     setUser(null)
   }
 
-  const handleNewBlog = (event) => {
-    const {name, value} = event.target
-    setNewBlog({...newBlog, [name]: value })
-  }
-
-  const addNewBlog = async () => {
+  const addNewBlog = async (blog) => {
     try {
-      const addedBlog = await blogService.create(newBlog)
+      const addedBlog = await blogService.create(blog)
 
       setBlogs(blogs.concat(addedBlog))
-      setNewBlog({...newBlog, title: '', author: '',url: ''})
       handleNotification(`A new blog: ${addedBlog.title} - by ${addedBlog.author} added`, "success")
     }
     catch ({ response }) {
@@ -117,8 +110,6 @@ const App = () => {
     <button type='submit' onClick={handleLogOut}>logout</button>
     <Togglable buttonLabel="new blog">
       <NewBlogForm
-        newBlog={newBlog}
-        handleNewBlog={handleNewBlog}
         addNewBlog={addNewBlog} 
       />
     </Togglable>
