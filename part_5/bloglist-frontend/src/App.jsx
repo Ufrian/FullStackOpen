@@ -5,6 +5,7 @@ import Blogs from './components/Blogs'
 import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -114,16 +115,17 @@ const App = () => {
     <Notification notification={ notification } />
     {user.name} logged in
     <button type='submit' onClick={handleLogOut}>logout</button>
-    <NewBlogForm
-      newBlog={newBlog}
-      handleNewBlog={handleNewBlog}
-      addNewBlog={addNewBlog} 
-    />
+    <Togglable buttonLabel="new blog">
+      <NewBlogForm
+        newBlog={newBlog}
+        handleNewBlog={handleNewBlog}
+        addNewBlog={addNewBlog} 
+      />
+    </Togglable>
     <h2>Blogs</h2>
     <Blogs blogs={ blogs }/>
   </div>
  )
 }
-
 
 export default App
