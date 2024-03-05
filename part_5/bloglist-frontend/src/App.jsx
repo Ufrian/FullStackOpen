@@ -87,6 +87,15 @@ const App = () => {
     }, 5000)
   }
 
+  const updateLikes = async (updatedBlog) => {
+    try {
+      const blogToUpdate = await blogService.update(updatedBlog)
+    }
+    catch ({ response }) {
+      handleNotification(response.data.error, "error")
+    }
+  }
+
   if (user === null) {
     return (
       <div>
@@ -109,12 +118,10 @@ const App = () => {
     {user.name} logged in
     <button type='submit' onClick={handleLogOut}>logout</button>
     <Togglable buttonLabel="new blog">
-      <NewBlogForm
-        addNewBlog={addNewBlog} 
-      />
+      <NewBlogForm addNewBlog={addNewBlog}/>
     </Togglable>
     <h2>Blogs</h2>
-    <Blogs blogs={ blogs }/>
+    <Blogs blogs={ blogs } updateLikes={ updateLikes } />
   </div>
  )
 }

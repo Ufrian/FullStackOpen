@@ -1,10 +1,10 @@
-import { useState } from "react"
+import { useState, useRef } from "react"
 
 import BlogPostDetails from "./BlogPostDetails"
 
-const Blog = ({ blog }) => {
-  const [show, setShow] = useState(false)
-  
+const Blog = ({ blog, updateLikes }) => {
+  const [show, setShow] = useState(false)  
+
   const btnLabel = show ? "hide" : "show"
 
   const blogStyle = {
@@ -25,9 +25,9 @@ const Blog = ({ blog }) => {
         { blog.title } - { blog.author }
         <button onClick={ toggleBtn }>{ btnLabel }</button>
       </div>
-      { show && <BlogPostDetails blog={blog} /> }
+      { show && <BlogPostDetails blog={blog} updateLikes={ updateLikes }/> }
     </div>
-)
+  )
 }
 
 export default Blog
