@@ -1,6 +1,6 @@
 const BlogPostDetails = ({ blog, updateLikes, deleteBlog }) => {
   const increaseLikes = () => {
-    const updatedBlog = {...blog, likes: blog.likes + 1}
+    const updatedBlog = { ...blog, likes: blog.likes + 1 }
     updateLikes(updatedBlog)
   }
 

@@ -1,11 +1,11 @@
-import { useState } from "react"
+import { useState } from 'react'
 
-import BlogPostDetails from "./BlogPostDetails"
+import BlogPostDetails from './BlogPostDetails'
 
 const Blog = ({ blog, updateLikes, deleteBlog }) => {
-  const [show, setShow] = useState(false)  
+  const [show, setShow] = useState(false)
 
-  const btnLabel = show ? "hide" : "show"
+  const btnLabel = show ? 'hide' : 'show'
 
   const blogStyle = {
     paddingTop: 10,
