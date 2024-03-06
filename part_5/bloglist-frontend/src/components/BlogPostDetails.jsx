@@ -1,10 +1,13 @@
-import { useState } from "react"
-
-const BlogPostDetails = ({ blog, updateLikes }) => {
-
+const BlogPostDetails = ({ blog, updateLikes, deleteBlog }) => {
   const increaseLikes = () => {
     const updatedBlog = {...blog, likes: blog.likes + 1}
     updateLikes(updatedBlog)
+  }
+
+  const confirmDeleteWindow = () => {
+    if (window.confirm(`Remove Blog ${blog.title} by ${blog.author}`)) {
+      deleteBlog(blog)
+    }
   }
 
   return (
@@ -15,6 +18,9 @@ const BlogPostDetails = ({ blog, updateLikes }) => {
         <button onClick={ increaseLikes }>like</button>
       </div>
       { blog.user.name }
+      <div>
+        <button onClick={ confirmDeleteWindow }>delete</button>
+      </div>
     </div>
   )
 }

@@ -101,6 +101,19 @@ const App = () => {
     }
   }
 
+  const deleteBlog = async (blogToDelete) => {
+    try {
+      await blogService.deleteBlogById(blogToDelete.id)
+      
+      const filteredBlogs = [...blogs.filter(blog => blog.id !== blogToDelete.id)]
+
+      setBlogs(filteredBlogs)
+    }
+    catch ({ response }) {
+      handleNotification(response.data.error, "error")
+    }
+  }
+
   const sortBlogs = () => {
     return blogs.toSorted((a, b) => a.likes - b.likes)
   }
@@ -132,7 +145,7 @@ const App = () => {
       <NewBlogForm addNewBlog={addNewBlog}/>
     </Togglable>
     <h2>Blogs</h2>
-    <Blogs blogs={ blogsToShow } updateLikes={ updateLikes } />
+    <Blogs blogs={ blogsToShow } updateLikes={ updateLikes } deleteBlog={ deleteBlog } />
   </div>
  )
 }

@@ -1,8 +1,8 @@
-import { useState, useRef } from "react"
+import { useState } from "react"
 
 import BlogPostDetails from "./BlogPostDetails"
 
-const Blog = ({ blog, updateLikes }) => {
+const Blog = ({ blog, updateLikes, deleteBlog }) => {
   const [show, setShow] = useState(false)  
 
   const btnLabel = show ? "hide" : "show"
@@ -25,7 +25,7 @@ const Blog = ({ blog, updateLikes }) => {
         { blog.title } - { blog.author }
         <button onClick={ toggleBtn }>{ btnLabel }</button>
       </div>
-      { show && <BlogPostDetails blog={blog} updateLikes={ updateLikes }/> }
+      { show && <BlogPostDetails blog={blog} updateLikes={ updateLikes } deleteBlog={ deleteBlog } /> }
     </div>
   )
 }
