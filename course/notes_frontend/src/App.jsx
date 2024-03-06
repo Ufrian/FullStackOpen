@@ -50,10 +50,10 @@ const App = () => {
   const toggleImportanceOf = id => {
     const note = notes.find(n => n.id === id)
     const changedNote = { ...note, important: !note.important }
-  
+
     noteService
       .update(id, changedNote)
-        .then(returnedNote => {
+      .then(returnedNote => {
         setNotes(notes.map(note => note.id !== id ? note : returnedNote))
       })
       .catch(error => {
@@ -66,10 +66,6 @@ const App = () => {
       })
   }
 
-  // const handleNoteChange = (event) => {
-    // setNewNote(event.target.value)
-  // }
-
   const handleLogin = async (username, password) => {
     try {
       const user = await loginService.login({
@@ -78,7 +74,7 @@ const App = () => {
 
       window.localStorage.setItem(
         'loggedNoteappUser', JSON.stringify(user)
-      ) 
+      )
 
       noteService.setToken(user.token)
       setUser(user)
@@ -113,17 +109,17 @@ const App = () => {
       </div>
     )
   }
-  
+
   const noteForm = () => (
     <Togglable buttonLabel="new note" ref={noteFormRef} >
       <NoteForm createNote={addNote}/>
     </Togglable>
-    )
+  )
 
   const notesToShow = showAll
     ? notes
     : notes.filter(note => note.important)
-  
+
   return (
     <div>
       <h1>Notes</h1>
@@ -134,17 +130,17 @@ const App = () => {
       {user && <div>
         {user.name} logged in
         <button type="submit" onClick={handleLogOut}>logout</button>
-          {noteForm()}
-        </div>
+        {noteForm()}
+      </div>
       }
 
       <div>
         <button onClick={() => setShowAll(!showAll)}>
           show {showAll ? 'important' : 'all' }
         </button>
-      </div>      
+      </div>
       <ul>
-        {notesToShow.map(note => 
+        {notesToShow.map(note =>
           <Note
             key={note.id}
             note={note}
