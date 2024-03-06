@@ -18,7 +18,7 @@ const create = async (blogObj) => {
   }
 
   const response = await axios.post(baseUrl, blogObj, config)
-  return response.data
+  return response.data  
 }
 
 const update = async (blogObj) => {
@@ -27,8 +27,17 @@ const update = async (blogObj) => {
   }
   const url = `${baseUrl}/${blogObj.id}`
   
-  const response = await axios.put(url, blogObj, config)
-  return response.data
+  const blogToUpdate = {...blogObj, 
+    user: blogObj.user.id
+  }
+
+  const response = await axios.put(url, blogToUpdate, config)
+
+  const updatedBlog = {...response.data, 
+    user: blogObj.user
+  }
+
+  return updatedBlog
 }
 
 export default { create, getAll, setToken, update }

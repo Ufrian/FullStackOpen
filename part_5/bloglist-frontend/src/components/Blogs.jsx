@@ -1,7 +1,6 @@
 import Blog from './Blog'
 
 const Blogs = ({ blogs, updateLikes }) => {
-
   return (
     <div>
       {blogs.map(blog =>

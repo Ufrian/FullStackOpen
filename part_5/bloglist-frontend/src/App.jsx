@@ -68,7 +68,9 @@ const App = () => {
     try {
       const addedBlog = await blogService.create(blog)
 
-      setBlogs(blogs.concat(addedBlog))
+      const blogToAdd = {...addedBlog, user: user}
+
+      setBlogs(blogs.concat(blogToAdd))
       handleNotification(`A new blog: ${addedBlog.title} - by ${addedBlog.author} added`, "success")
     }
     catch ({ response }) {
@@ -90,11 +92,20 @@ const App = () => {
   const updateLikes = async (updatedBlog) => {
     try {
       const blogToUpdate = await blogService.update(updatedBlog)
+
+      const updatedBlogs = blogs.filter(blog => blog.id !== blogToUpdate.id)
+      setBlogs(updatedBlogs.concat(blogToUpdate))
     }
     catch ({ response }) {
       handleNotification(response.data.error, "error")
     }
   }
+
+  const sortBlogs = () => {
+    return blogs.toSorted((a, b) => a.likes - b.likes)
+  }
+
+  const blogsToShow = blogs ? sortBlogs() : "" 
 
   if (user === null) {
     return (
@@ -121,7 +132,7 @@ const App = () => {
       <NewBlogForm addNewBlog={addNewBlog}/>
     </Togglable>
     <h2>Blogs</h2>
-    <Blogs blogs={ blogs } updateLikes={ updateLikes } />
+    <Blogs blogs={ blogsToShow } updateLikes={ updateLikes } />
   </div>
  )
 }
