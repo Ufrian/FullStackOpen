@@ -15,7 +15,7 @@ const BlogPostDetails = ({ blog, updateLikes, deleteBlog }) => {
       <a href={ blog.url } target="_blank" rel="noopener noreferrer" >{ blog.url }</a>
       <div>
         likes: { blog.likes }
-        <button onClick={ increaseLikes }>like</button>
+        <button className="like-btn" onClick={ increaseLikes }>like</button>
       </div>
       { blog.user.name }
       <div>

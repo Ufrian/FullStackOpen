@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+
 import Blog from './Blog'
+import BlogPostDetails from './BlogPostDetails'
 
 describe('Blog List Tests', () => {
   const blog = {
@@ -15,7 +17,7 @@ describe('Blog List Tests', () => {
   }
 
   test('<Blog/> Display title and author but not likes or URL', () => {
-    const { container } = render(<Blog blog={blog}/>)
+    const { container } = render(<Blog blog={ blog }/>)
     const div = container.querySelector('.blog-display')
 
     expect(div).toHaveTextContent(blog.title)
@@ -29,13 +31,26 @@ describe('Blog List Tests', () => {
     const toggleBtn = vi.fn()
     const user = userEvent.setup()
 
-    render(<Blog blog={blog} toggleBtn={toggleBtn} />)
+    render(<Blog blog={ blog } toggleBtn={ toggleBtn } />)
 
     const btn = screen.getByRole('button')
     await user.click(btn)
 
     expect(screen.getByText(blog.url)).toBeDefined()
     expect(screen.getByText(`likes: ${blog.likes}`)).toBeDefined()
+  })
+
+  test('Button clicked twice event handler is also called twice', async () => {
+    const mockUpdate = vi.fn()
+    const user = userEvent.setup()
+
+    const { container } = render(<BlogPostDetails blog={ blog } updateLikes={ mockUpdate }/>)
+
+    const btn = container.querySelector('.like-btn')
+    await user.click(btn)
+    await user.click(btn)
+
+    expect(mockUpdate.mock.calls).toHaveLength(2)
   })
 })
 
