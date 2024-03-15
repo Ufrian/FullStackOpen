@@ -21,7 +21,7 @@ const Blog = ({ blog, updateLikes, deleteBlog }) => {
 
   return (
     <div style={ blogStyle }>
-      <div>
+      <div className='blog-display'>
         { blog.title } - { blog.author }
         <button onClick={ toggleBtn }>{ btnLabel }</button>
       </div>
