@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 
 import NewBlogForm from './NewBlogForm'
 
-test('calls event handler with correct entries when new blog is created', async () => {
+test('calls event handler with correct details when new blog is created', async () => {
   const newBlog = {
     title: 'JavaScript Runs the World—Maybe Even Literally',
     author: 'SHEON HAN',

@@ -56,7 +56,7 @@ const App = () => {
     }
   }
 
-  if (!blogs.length) return
+  // if (!blogs.length) return
 
   const handleLogOut = async () => {
     window.localStorage.removeItem('loggedNoteappUser')
