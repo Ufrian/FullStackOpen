@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -15,6 +16,8 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+
+  const [notif , setNotif] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -45,10 +48,20 @@ const App = () => {
       const blogRsp = await blogService.create(blogObj)
 
       setBlogs([...blogs, blogRsp])
+      
+      const successNotiif = {
+        msg: `a new blog ${blogRsp.title} by ${blogRsp.author} added`,
+        status: "success"
+      }
+      handleNotification(successNotiif)
     }
-    catch (err) {
-      console.log("Error!")
-    }
+    catch ({ response }) {
+      const errorNotif = {
+        msg: response.data.error,
+        status: "error",
+      }
+      handleNotification(errorNotif)
+  }
   }
 
   const handleLogin = async (event) => {
@@ -63,8 +76,12 @@ const App = () => {
       setPassword('')
       setUser(user)
     } 
-    catch (err) {
-        console.log("Wrong Credentials")
+    catch ({ response }) {
+        const errorNotif = {
+          msg: response.data.error,
+          status: "error",
+        }
+        handleNotification(errorNotif)
     }
   }
 
@@ -76,9 +93,18 @@ const App = () => {
     setUser(null)
   }
 
+  const handleNotification = (notifObj) => {
+    setNotif(notifObj)
+
+    setTimeout(() => {
+      setNotif(null)
+    }, 5000);
+  }
+
   if (!user) {
     return (
       <div>
+        < Notification notifObj={notif} />
         <h2>LOG IN</h2>
         <form onSubmit={handleLogin}>
           <div>
@@ -106,7 +132,8 @@ const App = () => {
   }
 
   return (
-      <div>  
+      <div>
+        < Notification notifObj={notif} />  
         <h2>Blogs</h2>
           <p>{user.name} logged in</p>
           <button onClick={handleLogOut}>log out</button>
