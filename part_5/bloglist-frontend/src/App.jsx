@@ -30,7 +30,6 @@ const App = () => {
   }, [])
 
   const createBlog = async (title, author, url) => {
-
     try {
       const blogObj = {
         title: title,
@@ -89,6 +88,17 @@ const App = () => {
     }, 5000);
   }
 
+  const updateBlog = async (newBlogObj) => {
+    try {
+      const blogUpdate = await blogService.update(newBlogObj.id, newBlogObj)
+      setBlogs(blogs.map(blog => blog.id !== blogUpdate.id ? blog : blogUpdate))
+    }
+    catch (err) {
+      console.log(err)
+    }
+  }
+  
+
   if (!user) {
     return (
       <div>
@@ -104,13 +114,13 @@ const App = () => {
         <h2>Blogs</h2>
           <p>{user.name} logged in</p>
           <button onClick={ handleLogOut }>log out</button>
-          <Togglable>
+          <Togglable btnLabel={"create new note"}>
             <BlogForm  createBlog={ createBlog } />
           </Togglable>
         <div>
         <h2>Blog List</h2>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} updateBlog={ updateBlog }/>
         )}
         </div>
       </div>
