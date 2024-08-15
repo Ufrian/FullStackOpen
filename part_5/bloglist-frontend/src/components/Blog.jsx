@@ -1,13 +1,18 @@
 import "./Blog.css"
 import { useState } from "react"
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, updateBlog }) => {
   const [view, setView] = useState(false)
 
   const showView = { display: view ? '' : 'none' }
 
   const toggleBtnView = () => {
     setView(!view)
+  }
+
+  const increaseLikes = () => {
+    const blogToUpdate = {...blog, likes: blog.likes + 1}
+    updateBlog(blogToUpdate)
   }
   
   return (
@@ -22,10 +27,13 @@ const Blog = ({ blog }) => {
       </div>
       <div>
         likes: {blog.likes}
-        <button>like</button>
+        <button onClick={ increaseLikes }>like</button>
       </div>
       <div>
         {blog.author}
+      </div>
+      <div>
+        {blog.user.name}
       </div>
     </div>
   </div>
