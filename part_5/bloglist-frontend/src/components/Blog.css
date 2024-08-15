@@ -1,0 +1,11 @@
+.blog-view {
+    padding: 5px;
+    padding-left: 2px;
+    border: inset;
+    border-width: 2px;
+    margin-bottom: 5px;
+}
+
+.btn-view {
+    margin-left: 5px;
+}
