@@ -1,12 +1,22 @@
 import "./Blog.css"
 import { useState } from "react"
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, updateBlog }) => {
   const [view, setView] = useState(false)
   const showView = { display: view ? '' : 'none' }
 
   const toggleBtnView = () => {
     setView(!view)
+  }
+
+  const increaseLikes = () => {
+    const blogToUpdate = {
+      ...blog,
+      likes: blog.likes + 1,
+      user: blog.user.id
+    }
+
+    updateBlog(blogToUpdate)
   }
   
   return (
