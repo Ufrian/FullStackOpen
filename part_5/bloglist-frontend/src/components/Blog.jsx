@@ -3,7 +3,6 @@ import { useState } from "react"
 
 const Blog = ({ blog, updateBlog }) => {
   const [view, setView] = useState(false)
-
   const showView = { display: view ? '' : 'none' }
 
   const toggleBtnView = () => {
@@ -11,7 +10,12 @@ const Blog = ({ blog, updateBlog }) => {
   }
 
   const increaseLikes = () => {
-    const blogToUpdate = {...blog, likes: blog.likes + 1}
+    const blogToUpdate = {
+      ...blog,
+      likes: blog.likes + 1,
+      user: blog.user.id
+    }
+
     updateBlog(blogToUpdate)
   }
   
@@ -22,19 +26,10 @@ const Blog = ({ blog, updateBlog }) => {
     <button onClick={toggleBtnView} className="btn-view">{view ? "hide" : "view"}</button>  
     </div>
     <div style={showView}>
-      <div>
-        {blog.url}
-      </div>
-      <div>
-        likes: {blog.likes}
-        <button onClick={ increaseLikes }>like</button>
-      </div>
-      <div>
-        {blog.author}
-      </div>
-      <div>
-        {blog.user.name}
-      </div>
+      <a target="_blank" rel="noopener" href={blog.url}>{blog.url}</a>
+      <div>likes: {blog.likes}<button onClick={ increaseLikes }>like</button></div>
+      <div>{blog.author}</div>
+      <div>{blog.user.name}</div>
     </div>
   </div>
   )

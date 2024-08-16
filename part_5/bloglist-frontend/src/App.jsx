@@ -14,6 +14,8 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [notif , setNotif] = useState(null)
 
+  let sortedBlogs = []
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
@@ -88,6 +90,10 @@ const App = () => {
     }, 5000);
   }
 
+  const sortBlogs = () => {
+    sortedBlogs = blogs.toSorted((a, b) => b.likes - a.likes);
+  }
+
   const updateBlog = async (newBlogObj) => {
     try {
       const blogUpdate = await blogService.update(newBlogObj.id, newBlogObj)
@@ -97,7 +103,8 @@ const App = () => {
       console.log(err)
     }
   }
-  
+
+  sortBlogs()  
 
   if (!user) {
     return (
@@ -119,7 +126,7 @@ const App = () => {
           </Togglable>
         <div>
         <h2>Blog List</h2>
-        {blogs.map(blog =>
+        {sortedBlogs.map(blog =>
           <Blog key={blog.id} blog={blog} updateBlog={ updateBlog }/>
         )}
         </div>

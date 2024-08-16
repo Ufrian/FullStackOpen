@@ -45,6 +45,7 @@ blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
 
 blogsRouter.put('/:id', async (request, response, next) => {
   const body = request.body
+  console.log(body)
 
   const id = request.params.id
 
