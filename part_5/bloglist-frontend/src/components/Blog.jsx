@@ -1,7 +1,7 @@
 import "./Blog.css"
 import { useState } from "react"
 
-const Blog = ({ blog, updateBlog }) => {
+const Blog = ({ blog, updateBlog, removeBlog }) => {
   const [view, setView] = useState(false)
   const showView = { display: view ? '' : 'none' }
 
@@ -18,6 +18,12 @@ const Blog = ({ blog, updateBlog }) => {
 
     updateBlog(blogToUpdate)
   }
+
+  const popUpRemoveBlog = () => {
+    if (window.confirm(`Do you really want to remove ${blog.title}?`)) {
+      removeBlog(blog.id)
+    }
+  }
   
   return (
   <div className="blog-view">  
@@ -30,6 +36,7 @@ const Blog = ({ blog, updateBlog }) => {
       <div>likes: {blog.likes}<button onClick={ increaseLikes }>like</button></div>
       <div>{blog.author}</div>
       <div>{blog.user.name}</div>
+      <button onClick={popUpRemoveBlog}>remove</button>
     </div>
   </div>
   )

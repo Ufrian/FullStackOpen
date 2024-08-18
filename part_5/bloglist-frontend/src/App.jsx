@@ -90,6 +90,27 @@ const App = () => {
     }, 5000);
   }
 
+  const removeBlog = async (id) => {
+      try{
+        await blogService.remove(id);
+        const blogsRemoved = blogs.filter(blog => blog.id != id)
+        setBlogs(blogsRemoved)
+
+        const successNotiif = {
+          msg: "Blog deleted",
+          status: "success"
+        }
+        handleNotification(successNotiif)
+      }
+      catch ({ response }) {
+        const errorNotif = {
+          msg: response.data.error,
+          status: "error",
+        }
+        handleNotification(errorNotif)
+    }
+  }
+
   const sortBlogs = () => {
     sortedBlogs = blogs.toSorted((a, b) => b.likes - a.likes);
   }
@@ -127,7 +148,7 @@ const App = () => {
         <div>
         <h2>Blog List</h2>
         {sortedBlogs.map(blog =>
-          <Blog key={blog.id} blog={blog} updateBlog={ updateBlog }/>
+          <Blog key={blog.id} blog={blog} updateBlog={ updateBlog } removeBlog={removeBlog}/>
         )}
         </div>
       </div>
