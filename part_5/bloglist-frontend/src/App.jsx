@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from "react"
 
-import Blog from './components/Blog'
-import BlogForm from './components/BlogForm'
-import LoginForm from './components/LoginForm'
-import Notification from './components/Notification'
-import Togglable from './components/Togglable'
+import Blog from "./components/Blog"
+import BlogForm from "./components/BlogForm"
+import LoginForm from "./components/LoginForm"
+import Notification from "./components/Notification"
+import Togglable from "./components/Togglable"
 
-import blogService from './services/blogs'
-import loginService from './services/login'
+import blogService from "./services/blogs"
+import loginService from "./services/login"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -19,7 +19,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -43,7 +43,7 @@ const App = () => {
       const blogRsp = await blogService.create(blogObj)
 
       setBlogs([...blogs, blogRsp])
-      
+
       const successNotiif = {
         msg: `a new blog ${blogRsp.title} by ${blogRsp.author} added`,
         status: "success"
@@ -61,18 +61,18 @@ const App = () => {
 
   const handleLogin = async (username, password) => {
     try {
-      const user = await loginService.login({username, password})
+      const user = await loginService.login({ username, password })
 
-      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
+      window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
-    } 
+    }
     catch ({ response }) {
-        const errorNotif = {
-          msg: response.data.error,
-          status: "error",
-        }
-        handleNotification(errorNotif)
+      const errorNotif = {
+        msg: response.data.error,
+        status: "error",
+      }
+      handleNotification(errorNotif)
     }
   }
 
@@ -87,32 +87,32 @@ const App = () => {
 
     setTimeout(() => {
       setNotif(null)
-    }, 5000);
+    }, 5000)
   }
 
   const removeBlog = async (id) => {
-      try{
-        await blogService.remove(id);
-        const blogsRemoved = blogs.filter(blog => blog.id != id)
-        setBlogs(blogsRemoved)
+    try{
+      await blogService.remove(id)
+      const blogsRemoved = blogs.filter(blog => blog.id !== id)
+      setBlogs(blogsRemoved)
 
-        const successNotiif = {
-          msg: "Blog deleted",
-          status: "success"
-        }
-        handleNotification(successNotiif)
+      const successNotiif = {
+        msg: "Blog deleted",
+        status: "success"
       }
-      catch ({ response }) {
-        const errorNotif = {
-          msg: response.data.error,
-          status: "error",
-        }
-        handleNotification(errorNotif)
+      handleNotification(successNotiif)
+    }
+    catch ({ response }) {
+      const errorNotif = {
+        msg: response.data.error,
+        status: "error",
+      }
+      handleNotification(errorNotif)
     }
   }
 
   const sortBlogs = () => {
-    sortedBlogs = blogs.toSorted((a, b) => b.likes - a.likes);
+    sortedBlogs = blogs.toSorted((a, b) => b.likes - a.likes)
   }
 
   const updateBlog = async (newBlogObj) => {
@@ -125,7 +125,7 @@ const App = () => {
     }
   }
 
-  sortBlogs()  
+  sortBlogs()
 
   if (!user) {
     return (
@@ -137,21 +137,21 @@ const App = () => {
   }
 
   return (
+    <div>
+      < Notification notifObj={notif} />
+      <h2>Blogs</h2>
+      <p>{user.name} logged in</p>
+      <button onClick={ handleLogOut }>log out</button>
+      <Togglable btnLabel={"create new note"}>
+        <BlogForm  createBlog={ createBlog } />
+      </Togglable>
       <div>
-        < Notification notifObj={notif} />  
-        <h2>Blogs</h2>
-          <p>{user.name} logged in</p>
-          <button onClick={ handleLogOut }>log out</button>
-          <Togglable btnLabel={"create new note"}>
-            <BlogForm  createBlog={ createBlog } />
-          </Togglable>
-        <div>
         <h2>Blog List</h2>
         {sortedBlogs.map(blog =>
           <Blog key={blog.id} blog={blog} updateBlog={ updateBlog } removeBlog={removeBlog}/>
         )}
-        </div>
       </div>
+    </div>
   )
 }
 

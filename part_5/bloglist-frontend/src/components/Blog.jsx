@@ -1,9 +1,10 @@
 import "./Blog.css"
 import { useState } from "react"
+import PropTypes from "prop-types"
 
 const Blog = ({ blog, updateBlog, removeBlog }) => {
   const [view, setView] = useState(false)
-  const showView = { display: view ? '' : 'none' }
+  const showView = { display: view ? "" : "none" }
 
   const toggleBtnView = () => {
     setView(!view)
@@ -24,22 +25,28 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
       removeBlog(blog.id)
     }
   }
-  
+
   return (
-  <div className="blog-view">  
-    <div>
-      {blog.title} - {blog.author} 
-    <button onClick={toggleBtnView} className="btn-view">{view ? "hide" : "view"}</button>  
+    <div className="blog-view">
+      <div>
+        {blog.title} - {blog.author}
+        <button onClick={toggleBtnView} className="btn-view">{view ? "hide" : "view"}</button>
+      </div>
+      <div style={showView}>
+        <a target="_blank" rel="noopener noreferrer" href={blog.url}>{blog.url}</a>
+        <div>likes: {blog.likes}<button onClick={ increaseLikes }>like</button></div>
+        <div>{blog.author}</div>
+        <div>{blog.user.name}</div>
+        <button onClick={popUpRemoveBlog}>remove</button>
+      </div>
     </div>
-    <div style={showView}>
-      <a target="_blank" rel="noopener" href={blog.url}>{blog.url}</a>
-      <div>likes: {blog.likes}<button onClick={ increaseLikes }>like</button></div>
-      <div>{blog.author}</div>
-      <div>{blog.user.name}</div>
-      <button onClick={popUpRemoveBlog}>remove</button>
-    </div>
-  </div>
   )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  updateBlog: PropTypes.func.isRequired,
+  removeBlog: PropTypes.func.isRequired
 }
 
 export default Blog
