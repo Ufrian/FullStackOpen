@@ -28,7 +28,7 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
 
   return (
     <div className="blog-view">
-      <div>
+      <div className="blog-header">
         {blog.title} - {blog.author}
         <button onClick={toggleBtnView} className="btn-view">{view ? "hide" : "view"}</button>
       </div>
