@@ -2,11 +2,12 @@ import { render, screen } from "@testing-library/react"
 import Blog from "./Blog"
 import userEvent from "@testing-library/user-event"
 import { useDeferredValue } from "react"
-import { expect } from "vitest"
+import { expect, test } from "vitest"
 
 
 describe("<Blog />", () => {
   let container
+  let mockFn
 
   beforeEach(() => {
     const blog = {
@@ -18,7 +19,8 @@ describe("<Blog />", () => {
         name: "Wolfgang"
       }
     }
-    container = render(<Blog blog={ blog } />).container
+    mockFn = vi.fn()
+    container = render(<Blog blog={ blog } updateBlog={ mockFn }/>).container
   })
 
   test("renders title and author by default but dont likes and url", () => {
@@ -40,6 +42,15 @@ describe("<Blog />", () => {
 
     expect(div).toHaveTextContent("www.google.com.br")
     expect(div).toHaveTextContent("likes: 10")
+  })
+
+  test("Like button is called twice", async () => {
+    const user = userEvent.setup()
+    const likeBtn = screen.getByText("like")
+
+    await user.click(likeBtn)
+    await user.click(likeBtn)
+    expect(mockFn.mock.calls).toHaveLength(2)
   })
 })
 
