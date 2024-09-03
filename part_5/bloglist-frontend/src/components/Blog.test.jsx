@@ -1,8 +1,6 @@
 import { render, screen } from "@testing-library/react"
 import Blog from "./Blog"
 import userEvent from "@testing-library/user-event"
-import { useDeferredValue } from "react"
-import { expect, test } from "vitest"
 
 
 describe("<Blog />", () => {
