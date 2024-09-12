@@ -1,8 +1,9 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
+const { createBlog, loginWith } = require("./helper")
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
-    await request.post('/testing/reset')
+    await request.post('/api/testing/reset')
     await request.post('/api/users', {
       data: {
         name: "Usada Pekora",
@@ -21,22 +22,30 @@ describe('Blog app', () => {
 
   describe('Login', () => {
     test('succeeds with correct credentials', async ({ page }) => {
-      await page.getByTestId('username').fill("pekora")
-      await page.getByTestId('password').fill("pekochan")
-      await page.getByRole("button", { name: "Login" }).click()
+      await loginWith(page, "pekora", "pekochan")
 
       await expect(page.getByText("Usada Pekora logged in")).toBeVisible()
     })
 
     test('fails with wrong credentials', async ({ page }) => {
-      await page.getByTestId('username').fill("kaela")
-      await page.getByTestId('password').fill("konkaela")
-      await page.getByRole("button", { name: "Login" }).click()
+      await loginWith(page, "kaela", "konkaela")
 
       const errorDiv = await page.locator('.error')
       await expect(errorDiv).toContainText('invalid username or password') 
       
       await expect(page.getByText("Kaela Kovalskia logged in")).not.toBeVisible()
+    })
+  })
+
+  describe('When logged in', () => {
+    beforeEach(async ({ page }) => {
+      await loginWith(page, "pekora", "pekochan")
+    })
+  
+    test.only('a new blog can be created', async ({ page }) => {
+      await createBlog(page, "Super Title Test", "Gol D. Roger", "www.google.com.br")
+
+      await expect(page.getByText("Super Title Test - Gol D. Roger")).toBeVisible()
     })
   })
 })
