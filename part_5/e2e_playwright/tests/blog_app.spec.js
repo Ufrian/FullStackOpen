@@ -59,6 +59,17 @@ describe('Blog app', () => {
 
         await expect(page.getByText("Likes: 1")).toBeVisible()
       })
+
+      test("user who added the blog can delete it", async ({ page }) => {
+        await page.getByRole("button", { name: "view" }).click()
+        
+        page.on('dialog', async dialog => {
+          await dialog.accept();
+        })
+        await page.getByRole("button", { name: "remove" }).click()
+
+        await expect(page.getByText("Blog One - Monkey D. Luffy")).not.toBeVisible()
+      })
     })
   })
 })
