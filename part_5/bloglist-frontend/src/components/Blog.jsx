@@ -2,7 +2,7 @@ import "./Blog.css"
 import { useState } from "react"
 import PropTypes from "prop-types"
 
-const Blog = ({ blog, updateBlog, removeBlog }) => {
+const Blog = ({ blog, updateBlog, removeBlog, isBlogOwner }) => {
   const [view, setView] = useState(false)
   const showView = { display: view ? "" : "none" }
 
@@ -37,7 +37,10 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
         <div>likes: {blog.likes}<button onClick={ increaseLikes }>like</button></div>
         <div>{blog.author}</div>
         <div>{blog.user.name}</div>
-        <button onClick={popUpRemoveBlog}>remove</button>
+        {isBlogOwner(blog.user.name)
+          ? <button onClick={popUpRemoveBlog}>remove</button>
+          : ""
+        }
       </div>
     </div>
   )

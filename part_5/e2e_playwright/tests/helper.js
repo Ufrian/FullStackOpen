@@ -13,4 +13,8 @@ const loginWith = async (page, username, password)  => {
   await page.getByRole("button", { name: "Login" }).click()
 }
 
-export { createBlog, loginWith }
+const logOut = async (page) => {
+  await page.getByRole("button", { name: "log out" }).click()
+}
+
+export { createBlog, loginWith, logOut }

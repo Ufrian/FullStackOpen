@@ -90,6 +90,10 @@ const App = () => {
     }, 8000)
   }
 
+  const isBlogOwner = (blogCreator) => {
+    return blogCreator === user.name
+  }
+
   const removeBlog = async (id) => {
     try{
       await blogService.remove(id)
@@ -148,7 +152,7 @@ const App = () => {
       <div>
         <h2>Blog List</h2>
         {sortedBlogs.map(blog =>
-          <Blog key={blog.id} blog={blog} updateBlog={ updateBlog } removeBlog={removeBlog}/>
+          <Blog key={blog.id} blog={blog} updateBlog={ updateBlog } removeBlog={removeBlog} isBlogOwner={ isBlogOwner }/>
         )}
       </div>
     </div>
