@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 
 import Blog from "./components/Blog"
 import BlogForm from "./components/BlogForm"
@@ -13,6 +13,8 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [notif , setNotif] = useState(null)
+
+  const blogFormRef = useRef()
 
   let sortedBlogs = []
 
@@ -33,6 +35,8 @@ const App = () => {
 
   const createBlog = async (title, author, url) => {
     try {
+      blogFormRef.current.toggleVisibility()
+
       const blogObj = {
         title: title,
         author: author,
@@ -146,7 +150,7 @@ const App = () => {
       <h2>Blogs</h2>
       <p>{user.name} logged in</p>
       <button onClick={ handleLogOut }>log out</button>
-      <Togglable btnLabel={"create new note"}>
+      <Togglable btnLabel={"create new note"} ref={ blogFormRef }>
         <BlogForm  createBlog={ createBlog } />
       </Togglable>
       <div>

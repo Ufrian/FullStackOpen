@@ -10,6 +10,10 @@ const BlogForm = ({ createBlog }) => {
     e.preventDefault()
 
     createBlog(title, author, url)
+
+    setTitle("")
+    setAuthor("")
+    setUrl("")
   }
 
   return (

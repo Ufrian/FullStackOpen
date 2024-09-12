@@ -1,4 +1,4 @@
-const { test, expect, beforeEach, describe, mergeTests } = require('@playwright/test')
+const { test, expect, beforeEach, describe } = require('@playwright/test')
 const { createBlog, loginWith, logOut } = require("./helper")
 
 describe('Blog app', () => {
@@ -88,6 +88,30 @@ describe('Blog app', () => {
       })
     })
 
+    describe("and several blogs exist", () => {
+        beforeEach(async ({ page }) => {
+          await createBlog(page, "JavaScript Web Development", "John", "www.google.com")
+          await createBlog(page, "Kotlin Mobile Develompent", "Rushia", "www.google.com")
+          await createBlog(page, "Data Science with Python", "Karl", "wwww.google.com")
+        })
 
+        test("Blog with most likes is shown first", async ({ page }) => {
+          const pythonDiv = await page.locator(".blog-view", { hasText: "Data Science with Python - Karl"})
+          await pythonDiv.getByRole("button", { name: "view"}).click()
+          await pythonDiv.getByRole("button", { name: "like" }).click()
+          await pythonDiv.getByRole("button", { name: "like" }).click()
+          await pythonDiv.getByRole("button", { name: "like" }).click()
+          await pythonDiv.getByRole("button", { name: "like" }).click()
+          
+          const jsDiv = await page.locator(".blog-view", { hasText: "JavaScript Web Development - John"})
+          await jsDiv.getByRole("button", { name: "view"}).click()
+          await jsDiv.getByRole("button", { name: "like" }).click()
+                    
+          const blogsDivs = await page.locator(".blog-view").all()
+          await expect(blogsDivs[0]).toHaveText(/Data Science with Python - Karl/)
+          await expect(blogsDivs[1]).toHaveText(/JavaScript Web Development - John/)
+
+        })
+    })
   })
 })
