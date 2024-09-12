@@ -87,7 +87,7 @@ const App = () => {
 
     setTimeout(() => {
       setNotif(null)
-    }, 5000)
+    }, 8000)
   }
 
   const removeBlog = async (id) => {
